@@ -1,0 +1,43 @@
+.btn {
+  border: none;
+  outline: none;
+  appearance: none;
+  background-color: transparent;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.hashBtn {
+  width: 233px;
+  height: 50px
+}
+
+.bigDeleteBtn {
+  padding: 8px 20px;
+  background-color: #F1453D;
+  color: #F9F9FE;
+  border-radius: 30px;
+}
+
+.confirmBtn {
+  height: 40px;
+  width: 100px;
+  background-color: #21268F;
+  color: #F9F9FE;
+  border-radius: 30px;
+  box-shadow: 0 4px 18px rgba(33, 38, 143, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.confirmBtn:disabled {
+  background-color: rgba(33, 38, 143, 0.7);
+}
+
+.confirmBtn:hover {
+  background-color: rgba(33, 38, 143, 0.7);
+  transition: 0.2s;
+}
+
+
+
+
+

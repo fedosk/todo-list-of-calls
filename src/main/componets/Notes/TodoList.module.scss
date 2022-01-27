@@ -1,0 +1,25 @@
+.notesWrapper {
+  width: 838px;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+
+  .notesCreationBarWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 650px;
+    margin: 40px 0;
+    align-items: center;
+  }
+
+  .inputsWrapper {
+    border: 2px solid rgba(128, 128, 128, 0.74);
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+}
+

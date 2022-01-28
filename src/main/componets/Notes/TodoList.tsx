@@ -54,7 +54,7 @@ export const TodoList = () => {
                             <div style={{color: "red"}}>Max length 30!</div>}
                             <input
                                 className={styles.todoInput}
-                                onBlur={e => name.onBlur(e)}
+                                onBlur={() => name.onBlur()}
                                 onChange={e => name.onChange(e)}
                                 value={name.value}
                                 type="text"
@@ -68,7 +68,7 @@ export const TodoList = () => {
                             <div style={{color: "red"}}>Wrong number type!</div>}
                             <input
                                 className={styles.todoInput}
-                                onBlur={e => phoneNumber.onBlur(e)}
+                                onBlur={() => phoneNumber.onBlur()}
                                 onChange={e => phoneNumber.onChange(e)}
                                 value={phoneNumber.value}
                                 type="text"
@@ -80,7 +80,7 @@ export const TodoList = () => {
                             <div style={{color: "red"}}>Empty field!</div>}
                             <input
                                 className={styles.todoInput}
-                                onBlur={e => time.onBlur(e)}
+                                onBlur={() => time.onBlur()}
                                 onChange={e => time.onChange(e)}
                                 value={time.value}
                                 type="time"

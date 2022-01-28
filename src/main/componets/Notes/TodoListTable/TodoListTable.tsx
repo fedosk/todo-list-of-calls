@@ -56,7 +56,7 @@ export function TodoListTable() {
 
     if (sortedBy !== null) {
         filtredTodoData.sort((a, b) => {
-            if (a[sortedBy] < b[sortedBy]) {
+            if (a[sortedBy].toLocaleLowerCase() < b[sortedBy].toLocaleLowerCase()) {
                 return sortConfig === 'ascending' ? -1 : 1
             }
             if (a[sortedBy] > b[sortedBy]) {

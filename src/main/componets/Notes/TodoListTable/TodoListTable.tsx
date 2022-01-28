@@ -4,16 +4,23 @@ import {AppRootStateType} from "../../../store/store"
 import {deleteTodoList, InitialStateType} from "../../../store/app-reducer";
 import styles from "./TodoListTable.module.scss"
 import {Button} from "../../common/Button/Button"
-import {changeSortConfig, changeSorting, FilteringType, SortConfigType, SortType} from "../../../store/hashtag-reducer";
-import {currentTime} from "../TodoList";
+import {
+    changeSortConfig,
+    changeSorting,
+    FilteringType,
+    SortConfigType,
+    SortType
+} from "../../../store/sortAndFilter-reducer";
+import {currentTime} from "../../../currentTime";
 
 
 export function TodoListTable() {
+
     const dispatch = useDispatch()
     const todoData = useSelector<AppRootStateType, InitialStateType>(state => state.app)
-    const sortedBy = useSelector<AppRootStateType, SortType>(state => state.hashtag.sort)
-    const sortConfig = useSelector<AppRootStateType, SortConfigType>(state => state.hashtag.sortConfig)
-    const filter = useSelector<AppRootStateType, FilteringType>(state => state.hashtag.filter)
+    const sortedBy = useSelector<AppRootStateType, SortType>(state => state.sortAndFilter.sort)
+    const sortConfig = useSelector<AppRootStateType, SortConfigType>(state => state.sortAndFilter.sortConfig)
+    const filter = useSelector<AppRootStateType, FilteringType>(state => state.sortAndFilter.filter)
 
     const onDeleteBtnClick = (id: string) => {
         dispatch(deleteTodoList(id))
@@ -21,19 +28,11 @@ export function TodoListTable() {
 
     let filtredTodoData = [...todoData]
 
-    if (filter === 'finished') {
-        filtredTodoData = filtredTodoData.filter(t => t.status)
+    if (filter === 'all') {
+        filtredTodoData = [...todoData]
     }
     if (filter === 'next') {
-        let sortedByTime = filtredTodoData.sort((a, b) => {
-            if (a.time < b.time) {
-                return sortConfig === 'ascending' ? 1 : -1
-            }
-            if (b.time < a.time) {
-                return sortConfig === 'ascending' ? -1 : 1
-            }
-            return 0
-        })
+        let sortedByTime = filtredTodoData.sort((a, b) => a.time > b.time ? 1 : -1)
         let nextTodo = sortedByTime.find(e => e.time > currentTime)
         if (nextTodo) {
             filtredTodoData = [nextTodo]
@@ -41,8 +40,8 @@ export function TodoListTable() {
             filtredTodoData = []
         }
     }
-    if (filter === 'all') {
-        filtredTodoData = [...todoData]
+    if (filter === 'finished') {
+        filtredTodoData = filtredTodoData.filter(t => t.status)
     }
 
     const onSortedByBtnClick = (sortedBy: SortType) => {
@@ -84,7 +83,7 @@ export function TodoListTable() {
                     <th className={styles.hashtag}>
                         <button className={sortedBy === 'time' ? sortBtnClass : styles.btn}
                                 onClick={() => onSortedByBtnClick('time')}>
-                            time
+                            Time
                         </button>
                     </th>
                     <th className={styles.actions}>Status</th>
@@ -92,7 +91,7 @@ export function TodoListTable() {
                 </tr>
                 </thead>
                 <tbody>
-                {filtredTodoData.reverse().map((elem, index) => (
+                {filtredTodoData.reverse().map((elem) => (
                     <tr key={`key_${elem.id}`}>
                         <td className={styles.title}>
                             <b>

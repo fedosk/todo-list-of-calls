@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
 import {InitialStateType} from "../../store/app-reducer";
 
+
 export const NextCallSidebar = () => {
 
     const todoData = useSelector<AppRootStateType, InitialStateType>(state => state.app)
@@ -22,17 +23,20 @@ export const NextCallSidebar = () => {
                     <tbody>
                     <tr>
                         <td className={styles.hashtag}>
-                            Name: {nextCall && nextCall.name}
+                            <div><b>Name: </b></div>
+                            {nextCall && nextCall.name}
                         </td>
                     </tr>
                     <tr>
                         <td className={styles.hashtag}>
-                            Phone number: {nextCall && nextCall.number}
+                            <div><b>Phone number: </b></div>
+                            {nextCall && nextCall.number}
                         </td>
                     </tr>
                     <tr>
                         <td className={styles.hashtag}>
-                            Time: {nextCall && nextCall.time}
+                            <div><b>Time: </b></div>
+                            {nextCall && nextCall.time}
                         </td>
                     </tr>
                     </tbody>

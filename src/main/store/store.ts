@@ -1,10 +1,10 @@
 import {combineReducers, createStore} from 'redux'
 import {appReducer} from "./app-reducer";
-import {sortAndFilterReducer} from "./hashtag-reducer";
+import {sortAndFilterReducer} from "./sortAndFilter-reducer";
 
 const rootReducer = combineReducers({
     app: appReducer,
-    hashtag: sortAndFilterReducer
+    sortAndFilter: sortAndFilterReducer
 })
 
 const saveToLocalStorage = (state: AppRootStateType) => {

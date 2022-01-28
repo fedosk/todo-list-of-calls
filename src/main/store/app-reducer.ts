@@ -27,5 +27,4 @@ export const appReducer = (state: InitialStateType = initialState, action: Actio
 export const setTodoList = (todoListData: TodoDataType) => ({type: SET_TODO_LIST, todoListData} as const)
 export const deleteTodoList = (id: string) => ({type: DELETE_TODO_LIST, id} as const)
 
-type ActionsType = ReturnType<typeof setTodoList>
-    | ReturnType<typeof deleteTodoList>
+type ActionsType = ReturnType<typeof setTodoList> | ReturnType<typeof deleteTodoList>

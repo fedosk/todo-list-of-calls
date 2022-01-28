@@ -1,85 +1,15 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React from 'react';
 import styles from "./TodoList.module.scss";
 import {Button} from "../common/Button/Button";
 import {TodoListTable} from "./TodoListTable/TodoListTable";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setTodoList} from "../../store/app-reducer";
 import {v4} from 'uuid';
-import {changeFiltering, FilteringType} from "../../store/hashtag-reducer";
+import {changeFiltering, FilteringType} from "../../store/sortAndFilter-reducer";
+import {useInput} from "../../customHooks/validation";
+import {currentTime} from "../../currentTime";
+import {AppRootStateType} from "../../store/store";
 
-
-export type UseValidationType = {
-    maxLength: number
-    isEmpty: boolean
-    phoneNumberType?: boolean
-}
-
-export const useValidation = (value: string, validations: UseValidationType) => {
-    const [isEmpty, setIsEmpty] = useState<boolean>(true)
-    const [maxLength, setMaxLength] = useState<boolean>(false)
-    const [phoneNumberTypeError, setPhoneNumberTypeError] = useState<boolean>(false)
-    const [inputValid, setInputValid] = useState<boolean>(false)
-
-    useEffect(() => {
-        for (const validation in validations) {
-            switch (validation) {
-                case 'maxLength':
-                    value.length > validations[validation] ? setMaxLength(true) : setMaxLength(false)
-                    break;
-                case 'isEmpty':
-                    value.trim() ? setIsEmpty(false) : setIsEmpty(true)
-                    break;
-                case 'phoneNumberType':
-                    const numberReg = /^(\s*)?(\+|00)((\(\d{1,3}\))|\d{1,3})[\-]?[ ]?(\d[ ]?){9}(\s*)?$/
-                    numberReg.test(String(value).toLocaleLowerCase()) ? setPhoneNumberTypeError(false) : setPhoneNumberTypeError(true)
-                    break;
-            }
-        }
-    }, [value])
-
-    useEffect(() => {
-        if (isEmpty || maxLength || phoneNumberTypeError) {
-            setInputValid(false)
-        } else {
-            setInputValid(true)
-        }
-    }, [isEmpty, maxLength, phoneNumberTypeError])
-
-    return {
-        isEmpty,
-        maxLength,
-        phoneNumberTypeError,
-        inputValid
-    }
-}
-
-
-export const useInput = (innitialValue: string, validations: UseValidationType) => {
-    const [value, setValue] = useState(innitialValue)
-    const [isDirty, setIsDirty] = useState(false)
-
-    const valid = useValidation(value, validations)
-
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value)
-    }
-
-    const onBlur = (e: ChangeEvent<HTMLInputElement>) => {
-        setIsDirty(true)
-    }
-
-    return {
-        value,
-        setValue,
-        setIsDirty,
-        onChange,
-        onBlur,
-        isDirty,
-        ...valid
-    }
-}
-
-export const currentTime = new Date().toTimeString().slice(0, -35)
 
 export const TodoList = () => {
 
@@ -87,6 +17,7 @@ export const TodoList = () => {
     const name = useInput('', {isEmpty: true, maxLength: 30})
     const phoneNumber = useInput('', {isEmpty: true, maxLength: 30, phoneNumberType: false})
     const time = useInput('', {isEmpty: true, maxLength: 5})
+    const filter = useSelector<AppRootStateType, FilteringType>(state => state.sortAndFilter.filter)
 
     const onClickCreateNoteBtn = () => {
         let currentTodoStatus = currentTime > time.value
@@ -98,6 +29,7 @@ export const TodoList = () => {
             status: currentTodoStatus,
             id: v4()
         }))
+
         name.setValue('')
         name.setIsDirty(false)
         phoneNumber.setValue('')
@@ -113,34 +45,47 @@ export const TodoList = () => {
     return (
         <div className={styles.notesWrapper}>
             <div className={styles.notesCreationBarWrapper}>
-                <div className={styles.inputsWrapper}>
+                <div className={styles.inputsContainer}>
                     <form>
-                        {(name.isDirty && name.isEmpty) && <div style={{color: "red"}}>Empty field!</div>}
-                        {(name.isDirty && name.maxLength) && <div style={{color: "red"}}>Max length 30!</div>}
-                        <input
-                            onBlur={e => name.onBlur(e)}
-                            onChange={e => name.onChange(e)}
-                            value={name.value}
-                            type="text"
-                            name={'name'}
-                            placeholder={'Enter Name...'}/>
-                        {(phoneNumber.isDirty && phoneNumber.isEmpty) && <div style={{color: "red"}}>Empty field!</div>}
-                        {(phoneNumber.isDirty && phoneNumber.phoneNumberTypeError) &&
-                        <div style={{color: "red"}}>Wrong number type!</div>}
-                        <input
-                            onBlur={e => phoneNumber.onBlur(e)}
-                            onChange={e => phoneNumber.onChange(e)}
-                            value={phoneNumber.value}
-                            type="text"
-                            name={'number'}
-                            placeholder={'Enter phone number...'}/>
-                        {(time.isDirty && time.isEmpty) && <div style={{color: "red"}}>Empty field!</div>}
-                        <input
-                            onBlur={e => time.onBlur(e)}
-                            onChange={e => time.onChange(e)}
-                            value={time.value}
-                            type="time"
-                            name={'time'}/>
+                        <div className={styles.inputWrapper}>
+                            {(name.isDirty && name.isEmpty) &&
+                            <div style={{color: "red"}}>Empty field!</div>}
+                            {(name.isDirty && name.maxLength) &&
+                            <div style={{color: "red"}}>Max length 30!</div>}
+                            <input
+                                className={styles.todoInput}
+                                onBlur={e => name.onBlur(e)}
+                                onChange={e => name.onChange(e)}
+                                value={name.value}
+                                type="text"
+                                name={'name'}
+                                placeholder={'Enter Name...'}/>
+                        </div>
+                        <div className={styles.inputWrapper}>
+                            {(phoneNumber.isDirty && phoneNumber.isEmpty) &&
+                            <div style={{color: "red"}}>Empty field!</div>}
+                            {(phoneNumber.isDirty && phoneNumber.phoneNumberTypeError) &&
+                            <div style={{color: "red"}}>Wrong number type!</div>}
+                            <input
+                                className={styles.todoInput}
+                                onBlur={e => phoneNumber.onBlur(e)}
+                                onChange={e => phoneNumber.onChange(e)}
+                                value={phoneNumber.value}
+                                type="text"
+                                name={'number'}
+                                placeholder={'Enter phone number...'}/>
+                        </div>
+                        <div className={styles.inputWrapper}>
+                            {(time.isDirty && time.isEmpty) &&
+                            <div style={{color: "red"}}>Empty field!</div>}
+                            <input
+                                className={styles.todoInput}
+                                onBlur={e => time.onBlur(e)}
+                                onChange={e => time.onChange(e)}
+                                value={time.value}
+                                type="time"
+                                name={'time'}/>
+                        </div>
                     </form>
                 </div>
                 <Button
@@ -151,21 +96,21 @@ export const TodoList = () => {
                 </Button>
             </div>
             <div className={styles.filterBtnWrapper}>
-                <Button
-                    classBtn={"confirmBtn"}
+                <button
+                    className={filter === 'all' ? `${styles.btn} ${styles.active}` : styles.btn}
                     onClick={() => onFilterBtnClick('all')}>
                     All
-                </Button>
-                <Button
-                    classBtn={"confirmBtn"}
+                </button>
+                <button
+                    className={filter === 'next' ? `${styles.btn} ${styles.active}` : styles.btn}
                     onClick={() => onFilterBtnClick('next')}>
-                    next
-                </Button>
-                <Button
-                    classBtn={"confirmBtn"}
+                    Next
+                </button>
+                <button
+                    className={filter === 'finished' ? `${styles.btn} ${styles.active}` : styles.btn}
                     onClick={() => onFilterBtnClick('finished')}>
-                    finished
-                </Button>
+                    Finished
+                </button>
             </div>
             <TodoListTable/>
         </div>

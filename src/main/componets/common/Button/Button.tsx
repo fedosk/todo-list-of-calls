@@ -29,9 +29,6 @@ export const Button: React.FC<SuperButtonPropsType> = (
     if (classBtn === 'btn') {
         btnClassName = styles.btn
     }
-    if (classBtn === 'hashBtn') {
-        btnClassName = `${styles.btn} ${styles.hashBtn}`
-    }
     if (classBtn === 'confirmBtn') {
         btnClassName = `${styles.btn} ${styles.confirmBtn}`
     }
